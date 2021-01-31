@@ -44,9 +44,9 @@ class CustomMigration extends Command
         *    ];
         */
         $migrations = [ 
-            '2021_01_27_054603_create_tasks_table.php',
-            '2021_01_27_055611_create_task_roles_table.php',
-            '2021_01_27_055153_create_task_members_table.php',
+            '2021_01_28_025930_create_assignments_table.php',
+            '2021_01_28_032310_create_assignees_table.php',
+            '2021_01_28_033912_create_assignment_requirements_table.php',
         ];
 
         if (empty($migrations)) {
