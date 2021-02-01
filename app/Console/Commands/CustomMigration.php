@@ -44,6 +44,7 @@ class CustomMigration extends Command
         *    ];
         */
         $migrations = [ 
+            '2021_02_01_025851_create_subjects_table.php',
             '2021_01_28_025930_create_assignments_table.php',
             '2021_01_28_032310_create_assignees_table.php',
             '2021_01_28_033912_create_assignment_requirements_table.php',
