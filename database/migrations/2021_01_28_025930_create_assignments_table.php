@@ -21,8 +21,14 @@ class CreateAssignmentsTable extends Migration
             $table->integer('due_time');
             $table->string('evaluation_type')->default('individual');
             $table->string('status')->default('pending');
-            $table->unsignedBigInteger('subject_id')->nullable(true);
+            $table->unsignedBigInteger('subject_id');
             $table->timestamps();
+
+            $table->foreign('subject_id')
+                ->references('id')
+                ->on('subjects')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

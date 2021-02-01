@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +16,10 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+// namespace('Namespace Under Controller')
+Route::middleware('api')->name('api.assignments.')->group(function () {
+	Route::get('/assignments/{id?}', 'AssignmentController@index')->name('get');
+	Route::post('/assignments', 'AssignmentController@create')->name('post');
 });
