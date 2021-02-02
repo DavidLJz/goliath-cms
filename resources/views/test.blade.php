@@ -3,7 +3,7 @@
 @section('content')
 	<main role="main" class="container">
 		<div class="starter-template">
-			<assignment-form csrf="{{ csrf_token() }}" post_url="{{ route('api.assignments.post') }}" subjects_url="{{ route('api.subjects.get') }}"/>
+			@include('tables.assignments')
 		</div>
 	</main>
 @endsection

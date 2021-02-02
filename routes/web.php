@@ -11,36 +11,19 @@
 |
 */
 
-use App\Models\task;
-use App\Models\task_member;
-use App\Models\task_role;
+use Illuminate\Http\Request;
 
-Route::get('/', function () {
-    // return view('welcome');
+// namespace('Namespace Under Controller')
+Route::name('assignments.')->group(function () {
+	Route::get('/tareas', function (Request $request) {
+		return view('test')->with(compact('request'));
+	});
 
-	// $task = new task;
+	Route::get('/crear_tarea', function (Request $request) {
+		$min_dates = date('Y-m-d', time()-5184000);
+		$max_dates = date('Y-m-d', time()+5184000);
 
-	// $task->name = 'Mi primera actividad';
-	// $task->description = 'Mi descripción';
-	// $task->status = 0;
-	// $task->start_date = time();
-	// $task->due_date = time() + 10000;
-
-	// $task->save();
-
-	// $role = new task_role;
-
-	// $role->name = 'Coordinador';
-
-	// $role->save();
-
-	// $member = new task_member;
-
-	// $member->name = 'Sofia';
-	// $member->task_id = $task->id;
-	// $member->task_role_id = $role->id;
-
-	// $member->save();
-
-	dd(task::with('members')->first()->toArray());
+		return view('assignments.create')
+			->with(compact('request','min_dates','max_dates'));
+	});
 });

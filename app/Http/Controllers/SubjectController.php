@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\AssignmentJson;
-use App\Models\assignment;
+use App\Models\subject;
 use Illuminate\Http\Request;
+use App\Http\Resources\SubjectJson;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
-class AssignmentController extends Controller
+class SubjectController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +17,7 @@ class AssignmentController extends Controller
      */
     public function index(Request $request)
     {
-        $query = assignment::query();
+        $query = subject::query();
 
         $data = $request->all();
 
@@ -26,14 +26,7 @@ class AssignmentController extends Controller
             $attributes = [
                 'id' => 'integer',
                 'name' => 'string',
-                'description' => 'string',
-                'start_time' => 'integer',
-                'due_time' => 'integer',
-                'evaluation_type' => [
-                    'string', 'in:individual,group,team'
-                ],
-                'status' => ['string','in:pending,paused,extended,done'],
-                'subject_id' => 'integer'
+                'description' => 'string'
             ];
 
             $validator = Validator::make($data, $attributes);
@@ -44,7 +37,7 @@ class AssignmentController extends Controller
                 return response()->json(compact('errors'));
             }
 
-            $where = ['id', 'subject_id', 'evaluation_type', 'status'];
+            $where = ['id'];
             $like = ['name', 'description'];
 
             foreach ($where as $param) {
@@ -64,7 +57,7 @@ class AssignmentController extends Controller
             }
         }
 
-        return new AssignmentJson($query->get());
+        return new SubjectJson($query->get());
     }
 
     /**
@@ -72,43 +65,9 @@ class AssignmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
-        $data = $request->json()->all();
-
-        $attributes = [
-            'name' => 'bail|required',
-            'description' => 'string|nullable',
-            'start_time' => 'required|integer',
-            'due_time' => 'required|integer',
-            'evaluation_type' => [
-                'required', 'string', 'in:individual,group,team'
-            ],
-            'status' => ['string','in:pending,paused,extended,done'],
-            'subject_id' => 'bail|required|exists:App\Models\Subject,id'
-        ];
-
-        $validator = Validator::make($data, $attributes);
-
-        if (!$validator->passes()) {
-            $errors = $validator->errors()->all();
-
-            return response()->json(compact('errors'));
-        }
-
-        $query = new assignment;
-
-        foreach ($attributes as $name => $validation) {
-            if (empty($data[$name])) {
-                continue;
-            }
-
-            $query->{$name} = $data[$name];
-        }
-
-        $query->save();
-
-        return new AssignmentJson($query);
+        //
     }
 
     /**
@@ -125,10 +84,10 @@ class AssignmentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\assignment  $assignment
+     * @param  \App\Models\subject  $subject
      * @return \Illuminate\Http\Response
      */
-    public function show(assignment $assignment)
+    public function show(subject $subject)
     {
         //
     }
@@ -136,10 +95,10 @@ class AssignmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\assignment  $assignment
+     * @param  \App\Models\subject  $subject
      * @return \Illuminate\Http\Response
      */
-    public function edit(assignment $assignment)
+    public function edit(subject $subject)
     {
         //
     }
@@ -148,10 +107,10 @@ class AssignmentController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\assignment  $assignment
+     * @param  \App\Models\subject  $subject
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, assignment $assignment)
+    public function update(Request $request, subject $subject)
     {
         //
     }
@@ -159,10 +118,10 @@ class AssignmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\assignment  $assignment
+     * @param  \App\Models\subject  $subject
      * @return \Illuminate\Http\Response
      */
-    public function destroy(assignment $assignment)
+    public function destroy(subject $subject)
     {
         //
     }

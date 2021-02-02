@@ -19,6 +19,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 // namespace('Namespace Under Controller')
+Route::middleware('api')->name('api.subjects.')->group(function () {
+	Route::get('/subjects/{id?}', 'SubjectController@index')->name('get');
+	Route::post('/subjects', 'SubjectController@create')->name('post');
+});
+
 Route::middleware('api')->name('api.assignments.')->group(function () {
 	Route::get('/assignments/{id?}', 'AssignmentController@index')->name('get');
 	Route::post('/assignments', 'AssignmentController@create')->name('post');
