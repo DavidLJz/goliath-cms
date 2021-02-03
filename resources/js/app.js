@@ -22,7 +22,8 @@ window.Vue = require('vue');
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
 // Load laravel javascript assets in Vue components
-Vue.mixin(require('./asset-loader'))
+// Vue.mixin(require('./asset-loader'))
+// Vue.mixin(require('./api-requester'))
 
 //Vue.component('calendar', require('v-calendar/lib/components/calendar.umd.min'));
 Vue.component('date-picker', require('v-calendar/lib/components/date-picker.umd.min'));
