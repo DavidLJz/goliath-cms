@@ -1,4 +1,5 @@
 <template>
+<div id="assignment-form">
 	<form method="POST" :action="post_url" class="row" @submit.prevent="send($event)">
 		<input type="hidden" name="_token" :value="csrf">
 
@@ -55,6 +56,9 @@
 			<button :disabled="edit == false" type="submit" class="btn btn-info">Enviar</button>
 		</div>
 	</form>
+
+	<toast :parent_show="show_toast" body="La tarea se ha creado con exito!" case="success"></toast>
+</div>
 </template>
 
 <script>
@@ -77,7 +81,8 @@
 				},
 				subject_list : [],
 				group_list : [],
-				edit : true
+				edit : true,
+				show_toast : false
 			}
 		},
 		created () {
@@ -150,9 +155,15 @@
 
 				try {
 					let response = await this.apiRequest(url)
+					this.show_toast = true
+
 				} catch (e) {
 					console.error(e)
 					alert(e)
+
+				} finally {
+					this.edit = true
+				
 				}
 			}
 		}

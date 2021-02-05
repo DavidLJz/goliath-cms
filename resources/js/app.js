@@ -26,6 +26,7 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 // Vue.mixin(require('./api-requester'))
 
 //Vue.component('calendar', require('v-calendar/lib/components/calendar.umd.min'));
+Vue.component('toast', require('./components/Toast.vue').default);
 Vue.component('date-picker', require('v-calendar/lib/components/date-picker.umd.min'));
 Vue.component('range-calendar', require('./components/RangeCalendar.vue').default);
 Vue.component('assignment-form', require('./components/AssignmentForm.vue').default);
