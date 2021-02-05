@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * 
@@ -61,7 +62,7 @@ class Inquiry
 		}
 	}
 
-	public function buildQuery(Builder $query) :Builder
+	public function getting(Builder $query) :Builder
 	{
 		foreach ($this->where_queries as $column) {
 			if (empty($this->request_data[$column])) {
@@ -77,6 +78,15 @@ class Inquiry
 			}
 
 			$query->where($column, 'like', '%' . $this->request_data[$column] . '%');
+		}
+
+		return $query;
+	}
+
+	public function saving(Model $query) :Model
+	{
+		foreach ($this->request_data as $column => $value) {
+			$query->{$column} = $value;
 		}
 
 		return $query;

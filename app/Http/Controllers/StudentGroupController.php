@@ -34,7 +34,7 @@ class StudentGroupController extends Controller
                 ]);
             }
 
-            $query = $inquiry->buildQuery($query);
+            $query = $inquiry->getting($query);
         }
 
         return new StudentGroupJson($query->get());

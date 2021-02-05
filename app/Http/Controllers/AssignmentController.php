@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\AssignmentJson;
 use App\Models\assignment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+use App\Helpers\Inquiry;
 
 class AssignmentController extends Controller
 {
@@ -76,7 +75,13 @@ class AssignmentController extends Controller
     {
         $data = $request->json()->all();
 
-        $attributes = [
+        if (empty($data)) {
+            $error = 'El cuerpo de solicitud esta vacío';
+
+            return response()->json(compact('error'), 400);
+        }
+
+        $rules = [
             'name' => 'bail|required',
             'description' => 'string|nullable',
             'start_time' => 'required|integer',
@@ -85,30 +90,22 @@ class AssignmentController extends Controller
                 'required', 'string', 'in:individual,group,team'
             ],
             'status' => ['string','in:pending,paused,extended,done'],
-            'subject_id' => 'bail|required|exists:App\Models\Subject,id'
+            'subject_id' => 'bail|required|exists:App\Models\subject,id'
         ];
 
-        $validator = Validator::make($data, $attributes);
+        $inquiry = new Inquiry($rules, $data);
 
-        if (!$validator->passes()) {
-            $errors = $validator->errors()->all();
+        if (!empty($inquiry->errors)) {
+            $errors = $inquiry->errors;
 
-            return response()->json(compact('errors'));
+            return response()->json(compact('errors'), 400);
         }
 
-        $query = new assignment;
+        $assignment = $inquiry->saving(new assignment);
 
-        foreach ($attributes as $name => $validation) {
-            if (empty($data[$name])) {
-                continue;
-            }
+        $assignment->save();
 
-            $query->{$name} = $data[$name];
-        }
-
-        $query->save();
-
-        return new AssignmentJson($query);
+        return new AssignmentJson($assignment);
     }
 
     /**
