@@ -11,7 +11,7 @@
 
 		    <div class="form-group">
 		    	<label for="group" id="group">Grupo</label>
-	    		<select :disabled="edit == false" class="form-control" required name="group">
+	    		<select :disabled="edit == false" class="form-control" required>
 	    			<option value="" selected>Selecciona una opcion</option>
 			    	<option v-for="group in group_list" :value="group.id" :key="group.id">
 			    		{{ group.name }}
@@ -22,7 +22,7 @@
 		    <div class="form-group row">
 		    	<div class="col-lg-6 mb-sm-3">
 			    	<label for="evaluation">Tipo de evaluación</label>
-			    	<select :disabled="edit == false" required class="form-control" v-model="evaluation" name="evaluation" id="evaluation">
+			    	<select :disabled="edit == false" required class="form-control" v-model="evaluation" name="evaluation_type" id="evaluation">
 	    				<option value="" selected>Selecciona una opcion</option>
 			    		<option value="individual" selected>Individual</option>
 			    		<option value="team">Por equipos</option>
@@ -32,7 +32,7 @@
 
 		    	<div class="col-lg-6">
 			    	<label for="subject">Asignatura</label>
-			    	<select :disabled="edit == false" required class="form-control" v-model="subject" name="subject" id="subject">
+			    	<select :disabled="edit == false" required class="form-control" v-model="subject" name="subject_id" id="subject">
 	    				<option value="" selected>Selecciona una opcion</option>
 			    		<option v-for="subject in subject_list" :value="subject.id" :key="subject.id">
 			    			{{ subject.name }}
@@ -144,6 +144,11 @@
 
 				let plainForm = Object.fromEntries(form.entries())
 
+				plainForm['start_time'] = Math.round(this.range.start.getTime() / 1000)
+				plainForm['due_time'] =  Math.round(this.range.end.getTime() / 1000)
+
+				delete plainForm['_token']
+
 				let params = {
 					method : 'POST', 
 					headers : {
@@ -154,7 +159,7 @@
 				}
 
 				try {
-					let response = await this.apiRequest(url)
+					let response = await this.apiRequest(url, params)
 					this.show_toast = true
 
 				} catch (e) {
