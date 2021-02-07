@@ -4,12 +4,18 @@
 		@include('layouts.partials.head')
 	</head>
 	<body>
-		@include('layouts.partials.nav')
-		@include('layouts.partials.header')
 		<div id="app">
-			@yield('content')
+			@include('layouts.partials.header')
+
+			@include('layouts.partials.nav')
+
+			<main class="py-4 container">
+				@yield('content')
+			</main>
+
+			@include('layouts.partials.footer')
 		</div>
-		@include('layouts.partials.footer')
+
 		@include('layouts.partials.footer-scripts')
 	</body>
 </html>

@@ -17,12 +17,3 @@
 
 <!-- Use assets in Vue -->
 <script>window._assetPath = '{{ asset("") }}'</script>
-
-<style type="text/css">
-body {
-	padding-top: 5rem;
-}
-.starter-template {
-	padding: 3rem 1.5rem;
-}
-</style>
