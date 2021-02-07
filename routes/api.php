@@ -18,17 +18,23 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// namespace('Namespace Under Controller')
-Route::middleware('api')->name('api.subjects.')->group(function () {
-	Route::get('/subjects/{id?}', 'SubjectController@index')->name('get');
-	Route::post('/subjects', 'SubjectController@create')->name('post');
-});
+Route::apiResources([
+    'subjects' => SubjectController::class,
+    'assignments' => AssignmentController::class,
+    'student_groups' => StudentGroupController::class,
+]);
 
-Route::middleware('api')->name('api.assignments.')->group(function () {
-	Route::get('/assignments/{id?}', 'AssignmentController@index')->name('get');
-	Route::post('/assignments', 'AssignmentController@create')->name('post');
-});
+// // namespace('Namespace Under Controller')
+// Route::middleware('api')->name('api.subjects.')->group(function () {
+// 	Route::get('/subjects/{id?}', 'SubjectController@index')->name('get');
+// 	Route::post('/subjects', 'SubjectController@create')->name('post');
+// });
 
-Route::middleware('api')->name('api.student_groups.')->group(function () {
-	Route::get('/student_groups', 'StudentGroupController@index')->name('get');
-});
+// Route::middleware('api')->name('api.assignments.')->group(function () {
+// 	Route::get('/assignments/{id?}', 'AssignmentController@index')->name('get');
+// 	Route::post('/assignments', 'AssignmentController@create')->name('post');
+// });
+
+// Route::middleware('api')->name('api.student_groups.')->group(function () {
+// 	Route::get('/student_groups', 'StudentGroupController@index')->name('get');
+// });

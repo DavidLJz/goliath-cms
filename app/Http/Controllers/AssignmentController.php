@@ -22,45 +22,33 @@ class AssignmentController extends Controller
 
         if (!empty($data)) {
 
-            $attributes = [
-                'id' => 'integer',
-                'name' => 'string',
-                'description' => 'string',
-                'start_time' => 'integer',
-                'due_time' => 'integer',
-                'evaluation_type' => [
-                    'string', 'in:individual,group,team'
+            $rules = [
+                'like' => [
+                    'name' => 'string',
+                    'description' => 'string'
                 ],
-                'status' => ['string','in:pending,paused,extended,done'],
-                'subject_id' => 'integer'
+
+                'where' => [
+                    'id' => 'integer',
+                    'start_time' => 'integer',
+                    'due_time' => 'integer',
+                    'evaluation_type' => [
+                        'string', 'in:individual,group,team'
+                    ],
+                    'status' => ['string','in:pending,paused,extended,done'],
+                    'subject_id' => 'integer'
+                ]
             ];
 
-            $validator = Validator::make($data, $attributes);
+            $inquiry = new Inquiry($rules, $data);
 
-            if (!$validator->passes()) {
-                $errors = $validator->errors()->all();
+            if (!empty($inquiry->errors)) {
+                $errors = $inquiry->errors;
 
-                return response()->json(compact('errors'));
+                return response()->json(compact('errors'), 400);
             }
 
-            $where = ['id', 'subject_id', 'evaluation_type', 'status'];
-            $like = ['name', 'description'];
-
-            foreach ($where as $param) {
-                if (empty($data[$param])) {
-                    continue;
-                }
-
-                $query->where($param, $data[$param]);
-            }
-
-            foreach ($like as $param) {
-                if (empty($data[$param])) {
-                    continue;
-                }
-
-                $query->where($param, 'like', '%' . $data[$param] . '%');
-            }
+            $query = $inquiry->getting($query);
         }
 
         return new AssignmentJson($query->get());
@@ -72,6 +60,20 @@ class AssignmentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request)
+    {
+        $min_dates = date('Y-m-d', time()-5184000);
+        $max_dates = date('Y-m-d', time()+5184000);
+
+        return view('assignments.create')->with(compact('request','min_dates','max_dates'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
         $data = $request->json()->all();
 
@@ -101,22 +103,9 @@ class AssignmentController extends Controller
             return response()->json(compact('errors'), 400);
         }
 
-        $assignment = $inquiry->saving(new assignment);
-
-        $assignment->save();
+        $assignment = $inquiry->saving(new assignment)->save();
 
         return new AssignmentJson($assignment);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -127,7 +116,7 @@ class AssignmentController extends Controller
      */
     public function show(assignment $assignment)
     {
-        //
+        return view('test');
     }
 
     /**

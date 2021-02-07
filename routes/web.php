@@ -13,17 +13,10 @@
 
 use Illuminate\Http\Request;
 
-// namespace('Namespace Under Controller')
-Route::name('assignments.')->group(function () {
-	Route::get('/tareas', function (Request $request) {
-		return view('test')->with(compact('request'));
-	});
+Route::resource('tareas', 'AssignmentController')->only([
+	'create', 'show', 'edit'
+]);
 
-	Route::get('/crear_tarea', function (Request $request) {
-		$min_dates = date('Y-m-d', time()-5184000);
-		$max_dates = date('Y-m-d', time()+5184000);
+Auth::routes();
 
-		return view('assignments.create')
-			->with(compact('request','min_dates','max_dates'));
-	});
-});
+Route::get('/home', 'HomeController@index')->name('home');

@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\subject;
 use Illuminate\Http\Request;
+use App\Models\subject;
 use App\Http\Resources\SubjectJson;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+use App\Helpers\Inquiry;
 
 class SubjectController extends Controller
 {
@@ -17,44 +16,28 @@ class SubjectController extends Controller
      */
     public function index(Request $request)
     {
-        $query = subject::query();
-
         $data = $request->all();
 
-        if (!empty($data)) {
+        $query = subject::query();
 
-            $attributes = [
-                'id' => 'integer',
-                'name' => 'string',
-                'description' => 'string'
+        if (!empty($data)) {
+            $rules = [
+                'where' => ['id' => 'integer'],
+                'like' => [
+                    'name' => 'string',
+                    'description' => 'string'
+                ]
             ];
 
-            $validator = Validator::make($data, $attributes);
+            $inquiry = new Inquiry($rules, $data);
 
-            if (!$validator->passes()) {
-                $errors = $validator->errors()->all();
+            if (!empty($inquiry->errors)) {
+                $errors = $inquiry->errors;
 
-                return response()->json(compact('errors'));
+                return response()->json(compact('errors'), 400);
             }
 
-            $where = ['id'];
-            $like = ['name', 'description'];
-
-            foreach ($where as $param) {
-                if (empty($data[$param])) {
-                    continue;
-                }
-
-                $query->where($param, $data[$param]);
-            }
-
-            foreach ($like as $param) {
-                if (empty($data[$param])) {
-                    continue;
-                }
-
-                $query->where($param, 'like', '%' . $data[$param] . '%');
-            }
+            $query = $inquiry->getting($query);
         }
 
         return new SubjectJson($query->get());
